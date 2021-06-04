@@ -1,5 +1,8 @@
 <?php
 $host = "mysql-server";
+// $user = "ancc";
+// $pass = "ancc_123";
+// $db = "ancc";
 $user = "root";
 $pass = "secret";
 $db = "app1";
@@ -11,3 +14,4 @@ try {
 } catch(PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
+echo "<br>Hello, World!";

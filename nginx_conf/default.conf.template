@@ -1,0 +1,291 @@
+map $sent_http_content_type $expires {
+    default                    off;
+    text/html                  epoch;
+    text/css                   off;
+    application/javascript     max;
+    image/                     max;
+}
+
+#server {
+#    listen 443;
+#    server_name music.163.com;
+#
+#    location / {
+#        proxy_pass https://music.163.com;
+#    }
+#
+#    ssl_certificate /etc/nginx/ssl/music/server.crt;
+#    ssl_certificate_key /etc/nginx/ssl/music/server.key;
+#    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+#    ssl_session_cache shared:SSL:10m;
+#    ssl_session_timeout 10m;
+#    proxy_set_header Host $host;
+#    proxy_set_header X-Real-IP 182.138.156.158;
+#    proxy_set_header X-Forwarded-For 182.138.156.158;
+#}
+
+
+server {     
+    listen 80;
+    listen [::]:80;      
+    server_name localhost;      
+    client_max_body_size 13M;
+
+    error_page 404 = @notfound;
+    error_page 500 = @notfound;
+
+    # Pointing the root pointer to the static page website
+    location / {
+      root /usr/share/nginx/html/dist/temp/assets/static_pages;
+      index index.html index.htm; 
+      try_files $uri $uri.html /index.html =404;
+    }
+
+    location /index.html {
+      return 301 /;
+    }
+
+    location /index {
+      return 301 /;
+    }
+
+    location /introduction {
+      return 301 /;
+    }
+
+    # Serving the not found scenarios
+    location @notfound {
+      return 301 /;
+    }
+
+    # Denying the access to local HTACCESS file
+    location ~ /\.ht {
+       deny all;
+    }
+
+    # Denying the access to NGINX configuration file
+    location = /nginx.conf {
+       deny all;
+    }
+
+   location /sitemap.xml {
+      alias /usr/share/nginx/html/dist/temp/;
+      index sitemap.xml;
+   }
+
+   # angular app entry
+   location /customer/ {
+       alias /usr/share/nginx/html/dist/temp/;
+       index index.html index.htm;
+       try_files $uri $uri/ /customer/index.html;
+   }
+
+   # Start a Check page redirection
+   location /Start-a-Check {
+        proxy_pass http://localhost/customer/Start-a-Check;
+   }
+
+   # Police check verify redirection
+   location /police-check-verify {
+        proxy_pass http://localhost/customer/police-check-verify;
+   }
+
+   # Resume a Check page redirection
+   location /resume_a_check {
+        proxy_pass http://localhost/customer/resume_a_check;
+   }
+   location /Resume-a-Check {
+        proxy_pass http://localhost/customer/Resume-a-Check;
+   }
+  
+   # Track a check page redirection
+   location /Track-a-Check {
+        proxy_pass http://localhost/customer/Track-a-Check;
+   }
+
+   # Verify a check redirection
+   location /Verify-a-Check {
+        proxy_pass http://localhost/customer/Verify-a-Check;
+   }
+
+   # Contact us page redirection
+   location /Contact {
+        proxy_pass http://localhost/customer/Contact;
+   }
+
+   # RFI page redirection
+   location /rfi {
+        proxy_pass http://localhost/customer/rfi;
+   }
+
+   # Home page redirection
+   location /Home {
+      proxy_pass http://localhost/;
+   }
+
+   location /voucher-creation-form {
+      proxy_pass http://localhost/customer/voucher-creation-form;
+   }
+
+   #location /online-security {
+   #     proxy_pass http://localhost/online-security.html;
+   #}
+
+   location /spent-conviction-scheme {
+      proxy_pass http://localhost/spent-convictions-scheme.html;
+   }
+
+   #location /business-workplace-solutions {
+   #     proxy_pass http://localhost/business_workplace_solutions.html;
+   #}
+
+   location /FAQs-Static {
+        proxy_pass http://localhost/Frequently-Asked-Questions-FAQs.html;
+   }
+
+
+   #location /national-police-check {
+   #     proxy_pass http://localhost/national_police_check.html;
+   #}
+
+   location /Police-Checks-for-Employment-Licensing-or-Industry-Accreditations {
+        proxy_pass http://localhost/police-checks-for-employment.html;
+   }
+
+   location /About-us {
+        proxy_pass http://localhost/about-us.html;
+   }
+
+   location /Terms-&-Conditions {
+        proxy_pass http://localhost/terms-and-conditions.html;
+   }
+
+   location /States-Serviced {
+        proxy_pass http://localhost/State-Serviced.html;
+   }
+
+   location /New-South-Wales-NSW {
+        proxy_pass http://localhost/Police-Check-New-South-Wales-NSW.html;
+   }
+
+   location /Victoria-VIC {
+        proxy_pass http://localhost/Police-Check-Victoria-VIC.html;
+   }
+
+   location /Queensland-QLD {
+        proxy_pass http://localhost/Police-Check-Queensland-QLD.html;
+   }
+
+   location /South-Australia-SA {
+        proxy_pass http://localhost/Police-Check-South-Australia-SA.html;
+   }
+
+   location /Western-Australia-WA {
+        proxy_pass http://localhost/Police-Check-Western-Australia-WA.html;
+   }
+
+   location /Tasmania-TAS {
+        proxy_pass http://localhost/Police-Check-Tasmania-TAS.html;
+   }
+
+   location /Northern-Territory-NT {
+        proxy_pass http://localhost/Police-Check-Northern-Territory-NT.html;
+   }
+
+   location /Australian-Capital-Territory-ACT {
+        proxy_pass http://localhost/Police-Check-Australian-Capital-Territory-ACT.html;
+   } 
+
+   location /track-voucher-login {
+           proxy_pass http://localhost/customer/track-voucher-login;
+   }
+
+    # if ($host = localhost) {
+    #  return 301 http://localhost$request_uri;
+    #}
+
+   #if ($host = localhost) {
+   #   return 301 http://localhost$request_uri;
+   # }
+
+
+
+   location /staff_t {
+      root /usr/share/nginx/html/staff_dist/temp;
+      index nothing_will_match;
+      autoindex on;
+     #  try_files $uri $uri/ /index.html =404;
+   }  
+
+   location ~ \.php {
+            # this block will catch any requests with a .php extension
+            # normally in this block data would be passed to a FastCGI process
+ 
+            # these two lines tell Apache the actual IP of the client being forwarded
+            # Apache requires mod_proxy (http://bit.ly/mod_proxy) for these to work
+            # Most Apache 2.0+ servers have mod_proxy configured already
+ 
+            proxy_set_header X-Real-IP  $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+ 
+            # this next line adds the Host header so that apache knows which vHost to serve
+            # the $host variable is automatically set to the hostname Nginx is responding to
+ 
+           proxy_set_header Host $host;
+ 
+            # And now we pass back to apache
+            # if you're using a side-by-side configuration the IP can be changed to
+            # apache's bound IP at port 80 such as http://192.170.2.1:80
+
+            proxy_pass http://127.0.0.1:8080;
+     }
+
+     location ~ \.xml {
+            # this block will catch any requests with a .php extension
+            # normally in this block data would be passed to a FastCGI process
+
+            # these two lines tell Apache the actual IP of the client being forwarded
+            # Apache requires mod_proxy (http://bit.ly/mod_proxy) for these to work
+            # Most Apache 2.0+ servers have mod_proxy configured already
+
+            proxy_set_header X-Real-IP  $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+
+            # this next line adds the Host header so that apache knows which vHost to serve
+            # the $host variable is automatically set to the hostname Nginx is responding to
+
+            proxy_set_header Host $host;
+
+            # And now we pass back to apache
+            # if you're using a side-by-side configuration the IP can be changed to
+            # apache's bound IP at port 80 such as http://192.170.2.1:80
+
+           proxy_pass  http://127.0.0.1:8080;
+      }
+
+      location ~ \.pdf {
+            # this block will catch any requests with a .php extension
+            # normally in this block data would be passed to a FastCGI process
+
+            # these two lines tell Apache the actual IP of the client being forwarded
+            # Apache requires mod_proxy (http://bit.ly/mod_proxy) for these to work
+            # Most Apache 2.0+ servers have mod_proxy configured already
+
+            proxy_set_header X-Real-IP  $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+
+            # this next line adds the Host header so that apache knows which vHost to serve
+            # the $host variable is automatically set to the hostname Nginx is responding to
+
+            proxy_set_header Host $host;
+
+            # And now we pass back to apache
+            # if you're using a side-by-side configuration the IP can be changed to
+            # apache's bound IP at port 80 such as http://192.170.2.1:80
+
+           proxy_pass http://127.0.0.1:8080;
+      }
+}
+
+
+
