@@ -6,24 +6,9 @@ map $sent_http_content_type $expires {
     image/                     max;
 }
 
-#server {
-#    listen 443;
-#    server_name music.163.com;
-#
-#    location / {
-#        proxy_pass https://music.163.com;
-#    }
-#
-#    ssl_certificate /etc/nginx/ssl/music/server.crt;
-#    ssl_certificate_key /etc/nginx/ssl/music/server.key;
-#    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-#    ssl_session_cache shared:SSL:10m;
-#    ssl_session_timeout 10m;
-#    proxy_set_header Host $host;
-#    proxy_set_header X-Real-IP 182.138.156.158;
-#    proxy_set_header X-Forwarded-For 182.138.156.158;
-#}
-
+upstream web-server {
+     server web-server:80;
+}
 
 server {     
     listen 80;
@@ -237,7 +222,8 @@ server {
             # if you're using a side-by-side configuration the IP can be changed to
             # apache's bound IP at port 80 such as http://192.170.2.1:80
 
-            proxy_pass http://127.0.0.1:8080;
+            # proxy_pass http://127.0.0.1:8080;
+            proxy_pass http://web-server;
      }
 
      location ~ \.xml {
@@ -260,7 +246,8 @@ server {
             # if you're using a side-by-side configuration the IP can be changed to
             # apache's bound IP at port 80 such as http://192.170.2.1:80
 
-           proxy_pass  http://127.0.0.1:8080;
+            # proxy_pass http://127.0.0.1:8080;
+            proxy_pass http://web-server;
       }
 
       location ~ \.pdf {
@@ -283,7 +270,8 @@ server {
             # if you're using a side-by-side configuration the IP can be changed to
             # apache's bound IP at port 80 such as http://192.170.2.1:80
 
-           proxy_pass http://127.0.0.1:8080;
+            # proxy_pass http://127.0.0.1:8080;
+            proxy_pass http://web-server;
       }
 }
 
